@@ -130,6 +130,15 @@ class JvmDependencyAnalyzer(object):
           transitive_deps.update(transitive_deps_by_target.get(dep, []))
           transitive_deps.add(dep)
         transitive_deps_by_target[target] = transitive_deps
+
+      # Need to handle the case where a java_sources target has dependencies.
+      # In particular if it depends back on the original target.
+      if hasattr(target, 'java_sources'):
+        for java_source_target in target.java_sources:
+          if hasattr(java_source_target, 'dependencies'):
+            for transitive_dep in java_source_target.dependencies:
+              transitive_deps_by_target[java_source_target].add(transitive_dep)
+
     return transitive_deps_by_target
 
   def check(self, srcs, actual_deps):
