@@ -133,7 +133,7 @@ class JvmDependencyAnalyzer(object):
 
       # Need to handle the case where a java_sources target has dependencies.
       # In particular if it depends back on the original target.
-      if hasattr(target, 'java_sources'):
+      if hasattr(target, 'java_sources') and target.java_sources is not None:
         for java_source_target in target.java_sources:
           if hasattr(java_source_target, 'dependencies'):
             for transitive_dep in java_source_target.dependencies:
