@@ -58,7 +58,7 @@ class RoundEngine(Engine):
       if dependees is None:
         dependees = set()
         dependees_by_phase[phase] = dependees
-      # TODO(ity): Fix this, this should never be called with the same phase == dependee
+      # TODO(ity): Fix this check, this should never be called with the phase == dependee
       if dependee and dependee is not phase:
         dependees.add(dependee)
 
