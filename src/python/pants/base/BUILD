@@ -121,6 +121,7 @@ python_library(
   dependencies = [
     pants(':exceptions'),
     pants('3rdparty/python/twitter/commons:twitter.common.collections'),
+    pants('src/python/pants/authentication:authentication'),
     pants('src/python/pants/backend/android:plugin'),
     pants('src/python/pants/backend/codegen:plugin'),
     pants('src/python/pants/backend/core:plugin'),
