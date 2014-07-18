@@ -7,16 +7,17 @@ from __future__ import (nested_scopes, generators, division, absolute_import, wi
 
 import collections
 import os
-
 from netrc import netrc as NetrcDb, NetrcParseError
 
+from pants.base.build_manual import manual
 
+
+@manual.builddict()
 class Netrc(object):
+  """Fecthes username and passfrom from  ~/.netrc for logged in user."""
 
   class NetrcError(Exception):
-    """
-      Raised to indicate Netrc errors
-    """
+    """Raised to indicate Netrc errors"""
 
     def __init__(self, *args, **kwargs):
       super(Netrc.NetrcError, self).__init__(*args, **kwargs)
