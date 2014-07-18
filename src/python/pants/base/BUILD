@@ -20,6 +20,7 @@ python_library(
   sources = ['build_configuration.py'],
   dependencies = [
     pants('3rdparty/python/twitter/commons:twitter.common.collections'),
+    pants(':build_file_aliases'),
     pants(':parse_context'),
     pants(':target'),
     pants(':target_proxy'),
@@ -31,7 +32,7 @@ python_library(
   sources = ['build_environment.py'],
   dependencies = [
     pants('3rdparty/python/twitter/commons:twitter.common.log'),
-    pants('src/python/pants/version'),
+    pants('src/python/pants:version'),
     pants('src/python/pants/scm:all'),
     pants(':build_root'),
   ]
