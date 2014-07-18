@@ -7,6 +7,7 @@ from __future__ import (nested_scopes, generators, division, absolute_import, wi
 
 import collections
 import os
+
 from netrc import netrc as NetrcDb, NetrcParseError
 
 from pants.base.build_manual import manual
