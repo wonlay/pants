@@ -11,7 +11,7 @@ import re
 import pytest
 from mock import MagicMock, mock_open, patch
 
-from pants.authentication.netrc_util import Netrc
+from pants.backend.authentication.netrc_util import Netrc
 
 
 @patch('os.path')
