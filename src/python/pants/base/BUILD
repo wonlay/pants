@@ -121,8 +121,8 @@ python_library(
   dependencies = [
     pants(':exceptions'),
     pants('3rdparty/python/twitter/commons:twitter.common.collections'),
-    pants('src/python/pants/authentication:authentication'),
     pants('src/python/pants/backend/android:plugin'),
+    pants('src/python/pants/backend/authentication:authentication'),
     pants('src/python/pants/backend/codegen:plugin'),
     pants('src/python/pants/backend/core:plugin'),
     pants('src/python/pants/backend/jvm:plugin'),
@@ -243,6 +243,7 @@ python_library(
     pants(':build_manual'),
     pants(':fingerprint_strategy'),
     pants(':hash_utils'),
+    pants(':payload'),
     pants(':source_root'),
     pants('3rdparty/python/twitter/commons:twitter.common.collections'),
     pants('3rdparty/python/twitter/commons:twitter.common.lang'),

@@ -5,7 +5,7 @@
 from __future__ import (nested_scopes, generators, division, absolute_import, with_statement,
                         print_function, unicode_literals)
 
-from pants.authentication.netrc_util import Netrc
+from pants.backend.authentication.netrc_util import Netrc
 from pants.base.build_file_aliases import BuildFileAliases
 
 
