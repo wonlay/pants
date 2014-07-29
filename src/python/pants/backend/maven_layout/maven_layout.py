@@ -15,6 +15,7 @@ from pants.backend.codegen.targets.python_thrift_library import PythonThriftLibr
 from pants.backend.core.targets.doc import Page
 from pants.backend.core.targets.resources import Resources
 from pants.backend.jvm.targets.annotation_processor import AnnotationProcessor
+from pants.backend.jvm.targets.benchmark import Benchmark
 from pants.backend.jvm.targets.java_agent import JavaAgent
 from pants.backend.jvm.targets.java_library import JavaLibrary
 from pants.backend.jvm.targets.java_tests import JavaTests
@@ -46,7 +47,7 @@ def maven_layout(parse_context, basedir=''):
   root('src/main/protobuf', JavaProtobufLibrary, Page)
   root('src/main/python', Page, PythonBinary, PythonLibrary)
   root('src/main/resources', Page, Resources)
-  root('src/main/scala', JvmBinary, Page, ScalaLibrary)
+  root('src/main/scala', JvmBinary, Page, ScalaLibrary, Benchmark)
   root('src/main/thrift', JavaThriftLibrary, Page, PythonThriftLibrary)
 
   root('src/test/java', JavaLibrary, JavaTests, Page)
