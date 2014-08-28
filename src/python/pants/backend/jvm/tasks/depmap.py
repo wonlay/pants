@@ -12,6 +12,7 @@ import os
 from pants.backend.core.tasks.console_task import ConsoleTask
 from pants.backend.core.targets.dependencies import Dependencies
 from pants.backend.jvm.targets.jar_dependency import JarDependency
+from pants.backend.jvm.targets.scala_library import ScalaLibrary
 from pants.base.build_environment import get_buildroot
 from pants.base.exceptions import TaskError
 
@@ -255,7 +256,7 @@ class Depmap(ConsoleTask):
           for jar in dep.jar_dependencies:
             info['libraries'].append(self._jar_id(jar))
 
-      java_sources_targets = list(current_target.java_sources) if hasattr(current_target, 'java_sources') else list()
+      java_sources_targets = list(current_target.java_sources) if isinstance(current_target, ScalaLibrary) else list()
       """
       :type java_sources_targets:list[pants.base.target.Target]
       """
