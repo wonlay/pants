@@ -5,6 +5,7 @@
 from __future__ import (nested_scopes, generators, division, absolute_import, with_statement,
                         print_function, unicode_literals)
 from collections import defaultdict
+import itertools
 import json
 import os
 
@@ -254,9 +255,15 @@ class Depmap(ConsoleTask):
           for jar in dep.jar_dependencies:
             info['libraries'].append(self._jar_id(jar))
 
-      roots = list(set(
-        [os.path.dirname(source) for source in current_target.sources_relative_to_source_root()]
+      java_sources_targets = list(current_target.java_sources) if hasattr(current_target, 'java_sources') else list()
+      """
+      :type java_sources_targets:list[pants.base.target.Target]
+      """
+
+      roots = set(itertools.chain(
+        *[self._sources_for_target(t) for t in java_sources_targets + [current_target]]
       ))
+
       info['roots'] = map(lambda source: {
         'source_root': os.path.join(get_buildroot(), current_target.target_base, source),
         'package_prefix': source.replace(os.sep, '.')
@@ -284,4 +291,11 @@ class Depmap(ConsoleTask):
       for module in dep.modules_by_ref.values():
         mapping[self._jar_id(module.ref)] = [artifact.path for artifact in module.artifacts]
     return mapping
+
+  @staticmethod
+  def _sources_for_target(target):
+    """
+    :type target:pants.base.target.Target
+    """
+    return [os.path.dirname(source) for source in target.sources_relative_to_source_root()]
 

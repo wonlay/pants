@@ -12,6 +12,7 @@ from pants.backend.core.targets.dependencies import Dependencies
 from pants.backend.jvm.register import build_file_aliases as register_jvm
 from pants.backend.jvm.targets.jar_dependency import JarDependency
 from pants.backend.jvm.targets.jar_library import JarLibrary
+from pants.backend.jvm.targets.java_library import JavaLibrary
 from pants.backend.jvm.targets.java_tests import JavaTests
 from pants.backend.jvm.targets.jvm_binary import JvmApp, JvmBinary
 from pants.backend.jvm.targets.jvm_target import JvmTarget
@@ -275,42 +276,49 @@ class ProjectInfoTest(ConsoleTaskTest):
       target_type=JarLibrary,
     )
 
-    second = self.make_target(
-      'project_info:second',
+    jar_lib = self.make_target(
+      'project_info:jar_lib',
       target_type=JarLibrary,
       jars=[JarDependency('org.apache', 'apache-jar', '12.12.2012')],
     )
 
     self.make_target(
+      'project_info:java_lib',
+      target_type=JavaLibrary,
+      sources=['com/foo/Bar.java', 'com/foo/Baz.java'],
+    )
+
+    self.make_target(
       'project_info:third',
       target_type=ScalaLibrary,
-      dependencies=[second],
+      dependencies=[jar_lib],
+      java_sources=['project_info:java_lib'],
     )
 
     self.make_target(
       'project_info:jvm_app',
       target_type=JvmApp,
-      dependencies=[second],
+      dependencies=[jar_lib],
     )
 
     self.make_target(
       'project_info:jvm_target',
       target_type=JvmTarget,
-      dependencies=[second],
+      dependencies=[jar_lib],
       sources=['this/is/a/source/Foo.scala', 'this/is/a/source/Bar.scala'],
     )
 
     self.make_target(
       'project_info:java_test',
       target_type=JavaTests,
-      dependencies=[second],
+      dependencies=[jar_lib],
       sources=['this/is/a/test/source/FooTest.scala']
     )
 
     jvm_binary = self.make_target(
       'project_info:jvm_binary',
       target_type=JvmBinary,
-      dependencies=[second],
+      dependencies=[jar_lib],
     )
 
     self.make_target(
@@ -332,6 +340,11 @@ class ProjectInfoTest(ConsoleTaskTest):
       targets=[self.target('project_info:third')]
     ))
     self.assertEqual(['org.apache:apache-jar:12.12.2012'], result['targets']['project_info:third']['libraries'])
+    self.assertEqual(1, len(result['targets']['project_info:third']['roots']))
+    self.assertEqual(
+      'com.foo',
+      result['targets']['project_info:third']['roots'][0]['package_prefix']
+    )
 
   def test_jvm_app(self):
     result = get_json(self.execute_console_task(
