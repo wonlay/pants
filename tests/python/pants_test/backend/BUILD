@@ -5,6 +5,6 @@ python_test_suite(
   name = 'backend',
   dependencies = [
     'tests/python/pants_test/backend/core',
-    'tests/python/pants_test/backend/jvm/tasks/jvm_compile',
+    'tests/python/pants_test/backend/jvm',
   ]
 )
