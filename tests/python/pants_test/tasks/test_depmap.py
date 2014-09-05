@@ -371,6 +371,16 @@ class ProjectInfoTest(ConsoleTaskTest):
       'com.foo',
       result['targets']['project_info:third']['roots'][1]['package_prefix']
     )
+    self.assertEqual(
+      [
+        '%s/java/project_info/com/foo' % self.build_root,
+        '%s/project_info/com/foo' % self.build_root
+      ],
+      sorted([
+        result['targets']['project_info:third']['roots'][0]['source_root'],
+        result['targets']['project_info:third']['roots'][1]['source_root']
+      ])
+    )
     self.assertEqual(['org.apache:apache-jar:12.12.2012'],
                      result['targets']['project_info:third']['libraries'])
 
