@@ -33,15 +33,7 @@ class ConsoleTask(Task, QuietTaskMixin):
     separator_option = "console_%s_separator" % self.__class__.__name__
     self._console_separator = getattr(self.context.options,
                                       separator_option).decode('string-escape')
-    if self.context.options.console_outstream:
-      try:
-        self._outstream = safe_open(os.path.abspath(self.context.options.console_outstream), 'w')
-      except IOError as e:
-        raise TaskError('Error opening stream {out_file} due to'
-                        ' {error_str}'.format(out_file=self.context.options.console_outstream,
-                                              error_str=e))
-    else:
-      self._outstream = self.context.console_outstream
+    self._console_outstream = self.context.options.console_outstream
 
   @contextmanager
   def _guard_sigpipe(self):
@@ -53,17 +45,24 @@ class ConsoleTask(Task, QuietTaskMixin):
       if e.errno != errno.EPIPE:
         raise e
 
+  @contextmanager
+  def _outstream(self):
+    if self._console_outstream:
+      with safe_open(os.path.abspath(self._console_outstream), 'w') as out:
+        yield out
+    else:
+      try:
+        yield self.context.console_outstream
+      finally:
+        self.context.console_outstream.flush()
+
   def execute(self):
     with self._guard_sigpipe():
-      try:
+      with self._outstream as out:
         targets = self.context.targets()
         for value in self.console_output(targets):
-          self._outstream.write(str(value))
-          self._outstream.write(self._console_separator)
-      finally:
-        self._outstream.flush()
-        if self.context.options.console_outstream:
-          self._outstream.close()
+          out.write(str(value))
+          out.write(self._console_separator)
 
   def console_output(self, targets):
     raise NotImplementedError('console_output must be implemented by subclasses of ConsoleTask')
